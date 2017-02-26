@@ -1,6 +1,6 @@
 defmodule ExStub do
   @moduledoc """
-  ExStub provides an easy way to stub a module and enrich it with extra methods
+  ExStub provides an easy way to stub a module to facilitate writing clean, isolated unit tests.
 
   ## Example:
 
@@ -32,10 +32,13 @@ defmodule ExStub do
   MyStub.process(false) # returns :stubbed2
   MyStub.process(1) # returns :stubbed3
 
+  MyStub.process(20) # returns :original_process
+
   MyStub.another_method # returns :original_method
   ```
 
-  Since we did not stub `another_method`, calling it on `MyStub` returns the original implementation.
+  Notice that Since we did not stub `another_method`, calling it on `MyStub` returns the original implementation.
+  Also when calling `MyStub.process(20)` the original implementation is called since it failed pattern matching with our stub version of the method.
   """
 
   defmacro __using__(_) do
@@ -70,7 +73,7 @@ defmodule ExStub do
 
   As a safety procedure, if you try to stub a method that is not found in the original module. ExStub will throw a compilation error telling you about the unexpected stubbed method.
 
-  Example
+  ### Example
 
   ```elixir
   defstub MyStub, for: OriginalModule do
