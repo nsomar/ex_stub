@@ -4,7 +4,7 @@ defmodule ExStub.Mixfile do
   def project do
     [app: :ex_stub,
      version: "0.1.0",
-     elixir: "~> 1.3",
+     elixir: "~> 1.0",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      test_coverage: [tool: Coverex.Task, coveralls: true],
@@ -39,6 +39,7 @@ defmodule ExStub.Mixfile do
   defp package do
     [ files: [ "lib", "mix.exs", "README.md",],
       maintainers: [ "Omar Abdelhafith" ],
+      licenses: ["MIT"],
       links: %{ "GitHub" => "https://github.com/oarrabi/ex_stub" } ]
   end
 end
