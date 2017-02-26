@@ -1,4 +1,9 @@
 # ExStub
+[![Build Status](https://travis-ci.org/oarrabi/ex_stub.svg?branch=master)](https://travis-ci.org/oarrabi/ex_stub)
+[![Hex.pm](https://img.shields.io/hexpm/v/ex_stub.svg)](https://hex.pm/packages/ex_stub)
+[![API Docs](https://img.shields.io/badge/api-docs-yellow.svg?style=flat)](http://hexdocs.pm/ex_stub/)
+[![Coverage Status](https://coveralls.io/repos/github/oarrabi/ex_stub/badge.svg?branch=master)](https://coveralls.io/github/oarrabi/ex_stub?branch=master)
+[![Inline docs](http://inch-ci.org/github/oarrabi/ex_stub.svg?branch=master)](http://inch-ci.org/github/oarrabi/ex_stub)
 
 `ExStub` provides an easy way to stub a module to facilitate writing clean, isolated unit tests.
 
