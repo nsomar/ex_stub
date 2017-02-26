@@ -13,7 +13,7 @@ Add `ex_stub` to your deps in `mix.exs` as a development dependency.
 
 ```elixir
 def deps do
-  [{:ex_stub, "~> 0.1.0", only: :dev}]
+  [{:ex_stub, "~> 0.1.0", only: :test}]
 end
 ```
 
