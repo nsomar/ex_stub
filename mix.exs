@@ -13,6 +13,7 @@ defmodule ExStub.Mixfile do
      homepage_url: "http://nsomar.com",
      docs: [main: "ExStub",
             extras: ["README.md"]],
+     description: description,
      package: package,
      deps: deps]
   end
