@@ -45,7 +45,7 @@ defmodule UtilsTest do
     assert DefInfo.catches_all?([{:a, [line: 59], nil}, {:b, [line: 59], nil}]) == true
   end
 
-  describe "catch_all_functions" do
+  # describe "catch_all_functions" do
     test "it calculates the functions to generate with 0 catch alls" do
       module_functions = [process: 1, method: 0]
       stub_functions = [
@@ -78,9 +78,9 @@ defmodule UtilsTest do
       assert ExStub.Utils.catch_all_functions(module_functions, stub_functions) ==
       []
     end
-  end
+  # end
 
-  describe "non_exisiting_functions" do
+  # describe "non_exisiting_functions" do
     test "it calculates the non existing functions to generate with 0 catch alls" do
       module_functions = [process: 1, method: 0]
       stub_functions = [
@@ -113,5 +113,5 @@ defmodule UtilsTest do
       assert ExStub.Utils.non_exisiting_functions(module_functions, stub_functions) ==
       []
     end
-  end
+  # end
 end
