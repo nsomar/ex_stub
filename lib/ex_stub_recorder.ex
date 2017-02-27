@@ -46,9 +46,11 @@ defmodule ExStub.Recorder do
   Record a funtion call on a module with params.
   """
   def record_call(module, name, params) do
-    if Process.whereis(__MODULE__) != nil do
-      GenServer.call(__MODULE__, {:record, module, name, params})
+    if Process.whereis(__MODULE__) == nil do
+      __MODULE__.start_recording
     end
+
+    GenServer.call(__MODULE__, {:record, module, name, params})
   end
 
   @doc """
