@@ -44,6 +44,8 @@ defmodule ExStub do
   defmacro __using__(_) do
     quote do
       import ExStub
+      require ExStub.Assert
+      import ExStub.Assert
     end
   end
 
@@ -98,6 +100,7 @@ defmodule ExStub do
 
     # The functions in the stub module
     stub_functions = ExStub.Utils.functions_passed(block)
+    stub_functions = ExStub.Utils.add_recording_to_default(stub_functions)
     prepared_stub_functions = ExStub.Utils.functions_and_params(stub_functions)
 
     # Check that all the stub functions exist in the original module
@@ -126,9 +129,12 @@ defmodule ExStub do
     |> ExStub.Generator.generate_stub_module(all_functions)
     |> ExStub.Generator.module_ast
 
-    # stub_module_ast |> Macro.to_string |> IO.puts
+    stub_module_ast |> Macro.to_string |> IO.puts
 
-    stub_module_ast
+    [
+      stub_module_ast,
+      quote do ExStub.Recorder.start_recording end
+    ]
   end
 
   defp module_name_from_ast(ast_module_name), do: Code.eval_quoted(ast_module_name) |> elem(0)

@@ -84,7 +84,6 @@ defmodule ExStub.Utils do
     updated_list = update_funcst_to_add(to_add, name_arity)
 
     {functions, remaining_to_add} = create_method_and_append_it(h, module, updated_list)
-    # |> IO.inspect
 
     stub_functions_with_catch_all(tail,
                                 acc ++ functions,
@@ -109,4 +108,64 @@ defmodule ExStub.Utils do
       {:not_found, to_add}
     end
   end
+
+  ##########################################################################################
+  # Add Recording to default
+  ##########################################################################################
+  def add_recording_to_default(funcs) do
+    Enum.map(funcs, fn func -> add_recording_to_func(func) end)
+  end
+
+  defp add_recording_to_func(func) do
+    params = name_params_for_func(func)
+    body = add_recording_to_body(func)
+
+    func
+    |> replace_params_in_func(params)
+    |> replace_body_in_func(body)
+  end
+
+  defp name_params_for_func({_, _, [{_, _, nil}, _]}), do: []
+  defp name_params_for_func({_, _, [{_, _, params}, _]}) do
+    Enum.reduce(params, {1, []}, fn (param, {index, acc}) ->
+      new_param = name_param(param, index)
+      {index + 1, acc ++ [new_param]}
+    end)
+    |> elem(1)
+  end
+
+  defp replace_params_in_func({:def, line, [{func_name, func_line, params}, body]}, new_params) do
+    {:def, line, [{func_name, func_line, new_params}, body]}
+  end
+
+  defp replace_body_in_func({:def, line, [func_def, body]}, new_body) do
+    {:def, line, [func_def, new_body]}
+  end
+
+  defp name_param({_, line, _}=param, index) do
+    {:=, line, [param, {:"p#{index}__", line, nil}]}
+  end
+
+  defp add_recording_to_body({_, _, [{func_name, _, params}, [do: body]]}) do
+    call = ExStub.Generator.recording_call(func_name, params_count(params))
+    [do: add_call_to_body(call, body)]
+  end
+
+  [do: {:__block__, [line: 20],
+    [{{:., [line: 23],
+       [{:__aliases__, [counter: 0, line: 23], [:MyStubRecording]},
+        :__record_call__]}, [line: 23], [:process, [{:p1, [line: 23], nil}]]},
+     :new2]}]
+
+  def add_call_to_body(call, {:__block__, _, body}) do
+    {:__block__, [], [call| body]}
+  end
+
+  def add_call_to_body(call, body) do
+    {:__block__, [], [call, body]}
+  end
+
+  def params_count(nil), do: 0
+  def params_count(params), do: params |> Enum.count
+
 end
