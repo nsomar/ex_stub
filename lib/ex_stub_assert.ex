@@ -5,8 +5,20 @@ defmodule ExStub.Assert do
   """
 
   @doc """
-  Asserts that the function was called on the module with the passed params
+  Asserts that the function was called on the module with the passed params.
 
+  The syntax is `assert_called ModuleName, function_name, with: list_of_params`
+
+  ```elixir
+  # No parameters
+  assert_called ModuleName, function_name, with: []
+
+  # nil passed
+  assert_called ModuleName, function_name, with: [nil]
+
+  # multiple parameters
+  assert_called ModuleName, function_name, with: [1, 2]
+  ```
   ## Example
 
   ```elixir

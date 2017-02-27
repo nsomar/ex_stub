@@ -89,6 +89,21 @@ ExStub.Recorder.calls(YourModule, :the_method)
 
 Alternativey, you can use `assert_called` in your unit tests:
 
+The syntax is `assert_called ModuleName, function_name, with: list_of_params`
+
+```elixir
+# No parameters
+assert_called ModuleName, function_name, with: []
+
+# nil passed
+assert_called ModuleName, function_name, with: [nil]
+
+# multiple parameters
+assert_called ModuleName, function_name, with: [1, 2]
+```
+
+Some more examples
+
 ```elixir
 MyStub.process(1)
 
