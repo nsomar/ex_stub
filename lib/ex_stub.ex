@@ -59,13 +59,13 @@ defmodule ExStub do
   MyStub.process(1)
 
   # Passes since we called the function with [1]
-  assert_called MyStub, process, with: [1]
+  assert_called MyStub.process(1)
 
   # Fails since the parameters dont match
-  assert_called MyStub, process, with: [1, 2]
+  assert_called MyStub.process(1, 2)
 
   # Fails since we did not call `another_method`
-  assert_called MyStub, another_method, with: []
+  assert_called MyStub.another_method
   ```
   """
 
