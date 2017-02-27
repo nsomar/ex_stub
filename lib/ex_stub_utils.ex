@@ -145,7 +145,11 @@ defmodule ExStub.Utils do
   end
 
   defp name_param({_, line, _}=param, index) do
-    {:=, line, [param, {:"p#{index}__", line, nil}]}
+    {:=, [], [param, {:"p#{index}__", line, nil}]}
+  end
+
+  defp name_param(param, index) do
+    {:=, [], [param, {:"p#{index}__", [], nil}]}
   end
 
   defp add_recording_to_body({_, _, [{func_name, _, params}, [do: body]]}) do

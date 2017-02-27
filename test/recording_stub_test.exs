@@ -79,4 +79,16 @@ defmodule ExStubRecordingTest do
     assert_called MyStubRecording5, method1, with: []
     assert_called MyStubRecording5, process, with: [%{cool: 1}]
   end
+
+  test "assert called with constant params" do
+    defstub MyStubRecording6, for: OriginalModule do
+      def process(20), do: :new_method
+    end
+
+    assert MyStubRecording6.method1 == :method1
+    assert MyStubRecording6.process(%{cool: 1}) == :old1
+
+    assert_called MyStubRecording6, method1, with: []
+    assert_called MyStubRecording6, process, with: [%{cool: 1}]
+  end
 end
