@@ -1,6 +1,8 @@
 defmodule ExStub.Utils do
   @moduledoc """
-  ExStub utilitie class
+  ExStub utilitie class.
+
+  This module is for internal use only.
   """
 
   @doc """

@@ -5,7 +5,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/oarrabi/ex_stub/badge.svg?branch=master)](https://coveralls.io/github/oarrabi/ex_stub?branch=master)
 [![Inline docs](http://inch-ci.org/github/oarrabi/ex_stub.svg?branch=master)](http://inch-ci.org/github/oarrabi/ex_stub)
 
-`ExStub` provides an easy way to stub a module to facilitate writing clean, isolated unit tests.
+`ExStub` provides an easy way to stub a module and record the function calls on it.
 
 ## Installation
 
@@ -74,3 +74,30 @@ The following error will be thrown
 The def `{:new_method, 0}` is not defined in module `OriginalModule`
 ```
 
+## Recording method calls
+All the functions called on the `defstub` created module will be recorded.
+
+To get all the functions calls on `YourModule` module
+```elixir
+ExStub.Recorder.calls(YourModule)
+```
+
+To get all the `:the_method` function calls on `YourModule` 
+```elixr
+ExStub.Recorder.calls(YourModule, :the_method)
+```
+
+Alternativey, you can use `assert_called` in your unit tests:
+
+```elixir
+MyStub.process(1)
+
+# Passes since we called the function with [1]
+assert_called MyStub, process, with: [1]
+
+# Fails since the parameters dont match
+assert_called MyStub, process, with: [1, 2]
+
+# Fails since we did not call `another_method`
+assert_called MyStub, another_method, with: []
+```

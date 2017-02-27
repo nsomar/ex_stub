@@ -2,7 +2,7 @@ defmodule ExStub do
   @moduledoc """
   ExStub provides an easy way to stub a module to facilitate writing clean, isolated unit tests.
 
-  ## Example:
+  ## Example
 
   If you have a module in your original application like:
 
@@ -39,6 +39,34 @@ defmodule ExStub do
 
   Notice that Since we did not stub `another_method`, calling it on `MyStub` returns the original implementation.
   Also when calling `MyStub.process(20)` the original implementation is called since it failed pattern matching with our stub version of the method.
+
+  ## Recording method calls
+  All the functions called on the `defstub` created module will be recorded.
+
+  To get all the functions calls on `YourModule` module
+  ```elixir
+  ExStub.Recorder.calls(YourModule)
+  ```
+
+  To get all the `:the_method` function calls on `YourModule`
+  ```elixr
+  ExStub.Recorder.calls(YourModule, :the_method)
+  ```
+
+  Alternativey, you can use `assert_called` in your unit tests:
+
+  ```elixir
+  MyStub.process(1)
+
+  # Passes since we called the function with [1]
+  assert_called MyStub, process, with: [1]
+
+  # Fails since the parameters dont match
+  assert_called MyStub, process, with: [1, 2]
+
+  # Fails since we did not call `another_method`
+  assert_called MyStub, another_method, with: []
+  ```
   """
 
   defmacro __using__(_) do
@@ -129,7 +157,7 @@ defmodule ExStub do
     |> ExStub.Generator.generate_stub_module(all_functions)
     |> ExStub.Generator.module_ast
 
-    stub_module_ast |> Macro.to_string |> IO.puts
+    # stub_module_ast |> Macro.to_string |> IO.puts
 
     [
       stub_module_ast,

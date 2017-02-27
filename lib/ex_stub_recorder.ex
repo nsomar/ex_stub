@@ -1,11 +1,9 @@
 defmodule ExStub.Recorder do
-  use GenServer
+  @moduledoc """
+  `ExStub.Recorder` Provides methods to record the function calls and provides a set of functions to query the recorded executions.
+  """
 
-  def start_recording do
-    {:ok, pid} = GenServer.start_link(__MODULE__, [], name: __MODULE__)
-    GenServer.call(__MODULE__, :init)
-    pid
-  end
+  use GenServer
 
   def handle_call(:init, _, _) do
     res = :ets.new(__MODULE__, [:duplicate_bag, :protected, :named_table])
@@ -35,20 +33,68 @@ defmodule ExStub.Recorder do
     {:reply, res, []}
   end
 
+  @doc """
+  Start the recording session. (Not to be called manually)
+  """
+  def start_recording do
+    {:ok, pid} = GenServer.start_link(__MODULE__, [], name: __MODULE__)
+    GenServer.call(__MODULE__, :init)
+    pid
+  end
+
+  @doc """
+  Record a funtion call on a module with params.
+  """
   def record_call(module, name, params) do
     if Process.whereis(__MODULE__) != nil do
       GenServer.call(__MODULE__, {:record, module, name, params})
     end
   end
 
+  @doc """
+  Get all the function calls on a specific module.
+
+  ## Example
+  ```
+  MyStub.func1
+  MyStub.func2
+
+  ExStub.Recorder.calls(MyStub)
+  ```
+  This returns [func1: [], func2: []]
+  """
   def calls(module) do
     call_if_possible({:state, module})
   end
 
+  @doc """
+  Get all the function calls on a specific module that match a function name.
+
+  ## Example
+  ```
+  MyStub.func1([1])
+  MyStub.func2([1, 2])
+
+  ExStub.Recorder.calls(MyStub, :func2)
+  ```
+  This returns [func1: [1]]
+  """
   def calls(module, function) do
     call_if_possible({:state, module, function})
   end
 
+  @doc """
+  Get all the function calls on a specific module that match a function name and list of params.
+
+  ## Example
+  ```
+  MyStub.func1([1])
+  MyStub.func1([2])
+
+  ExStub.Recorder.calls(MyStub, :func2, [1])
+  ```
+  This returns [func1: [1]]
+  """
   def calls(module, function, params) do
     {:state, module, function, params}
     call_if_possible({:state, module, function, params})

@@ -1,6 +1,8 @@
 defmodule ExStub.Generator do
   @moduledoc """
-  Provide functions to generate a forwarding function, and the stub module
+  Provide functions to generate a forwarding function, and the stub module.
+
+  This module is for internal use only.
   """
 
   @doc """
