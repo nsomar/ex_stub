@@ -136,11 +136,11 @@ defmodule ExStub.Utils do
     |> elem(1)
   end
 
-  defp replace_params_in_func({:def, line, [{func_name, func_line, params}, body]}, new_params) do
+  defp replace_params_in_func({:def, line, [{func_name, func_line, _}, body]}, new_params) do
     {:def, line, [{func_name, func_line, new_params}, body]}
   end
 
-  defp replace_body_in_func({:def, line, [func_def, body]}, new_body) do
+  defp replace_body_in_func({:def, line, [func_def, _]}, new_body) do
     {:def, line, [func_def, new_body]}
   end
 

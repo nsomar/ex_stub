@@ -37,7 +37,7 @@ defmodule ExStub.Assert do
     {{:., _, [module, function]}, _, params} = call
     mod_name = module_name_from_ast(module)
 
-    assert_call_macro(module, function, params)
+    assert_call_macro(mod_name, function, params)
   end
 
   defp assert_call_macro(mod_name, func_name, params) do
@@ -63,6 +63,5 @@ defmodule ExStub.Assert do
   end
 
   defp module_name_from_ast(ast_module_name), do: Code.eval_quoted(ast_module_name) |> elem(0)
-  defp function_name({name, _, _}), do: name
 
 end
