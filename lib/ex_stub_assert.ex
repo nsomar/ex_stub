@@ -4,20 +4,55 @@ defmodule ExStub.Assert do
   This module is already required and imported when using `use ExStub`
   """
 
+  # @doc """
+  # Asserts that the function was called on the module with the passed params.
+
+  # The syntax is `assert_called ModuleName, function_name, with: list_of_params`
+
+  # ```elixir
+  # # No parameters
+  # assert_called ModuleName, function_name, with: []
+
+  # # nil passed
+  # assert_called ModuleName, function_name, with: [nil]
+
+  # # multiple parameters
+  # assert_called ModuleName, function_name, with: [1, 2]
+  # ```
+  # ## Example
+
+  # ```elixir
+  # defstub MyStub, for: OriginalModule do
+  #   def process(1), do: :stubbed3
+  # end
+
+  # MyStub.process(1)
+
+  # # Passes since we called the function with [1]
+  # assert_called MyStub, process, with: [1]
+
+  # # Fails since the parameters dont match
+  # assert_called MyStub, process, with: [1, 2]
+
+  # # Fails since we did not call `another_method`
+  # assert_called MyStub, another_method, with: []
+  # ```
+  # """
+  # defmacro assert_called(module, function, [with: params]) do
+  #   mod_name = module_name_from_ast(module)
+  #   func_name = function_name(function)
+  #   assert_call_macro(mod_name, func_name, params)
+  # end
+
   @doc """
   Asserts that the function was called on the module with the passed params.
 
-  The syntax is `assert_called ModuleName, function_name, with: list_of_params`
+  The syntax is `assert_called ModuleName.function_name(params)`
 
   ```elixir
-  # No parameters
-  assert_called ModuleName, function_name, with: []
-
-  # nil passed
-  assert_called ModuleName, function_name, with: [nil]
-
-  # multiple parameters
-  assert_called ModuleName, function_name, with: [1, 2]
+  assert_called ModuleName.function_name()
+  assert_called ModuleName.function_name(nil)
+  assert_called ModuleName.function_name(1, 2)
   ```
   ## Example
 
@@ -29,19 +64,23 @@ defmodule ExStub.Assert do
   MyStub.process(1)
 
   # Passes since we called the function with [1]
-  assert_called MyStub, process, with: [1]
+  MyStub.process(1)
 
   # Fails since the parameters dont match
-  assert_called MyStub, process, with: [1, 2]
+  MyStub.process(1, 2)
 
   # Fails since we did not call `another_method`
-  assert_called MyStub, another_method, with: []
+  MyStub.another_method()
   ```
   """
-  defmacro assert_called(module, function, [with: params]) do
+  defmacro assert_called(call) do
+    {{:., _, [module, function]}, _, params} = call
     mod_name = module_name_from_ast(module)
-    func_name = function_name(function)
 
+    assert_call_macro(module, function, params)
+  end
+
+  defp assert_call_macro(mod_name, func_name, params) do
     quote do
       res = check_called(unquote(mod_name),unquote(func_name), unquote(params))
       if res != :ok do

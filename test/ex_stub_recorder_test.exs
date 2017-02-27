@@ -35,7 +35,7 @@ defmodule ExStubRecorderTest do
   test "it can use with asserts" do
     ExStub.Recorder.start_recording
     ExStub.Recorder.record_call(ExUnit, :method1, [1, 2])
-    assert_called ExUnit, method1, with: [1, 2]
+    assert_called ExUnit.method1(1, 2)
   end
 
   test "it returns correct error when fails" do
